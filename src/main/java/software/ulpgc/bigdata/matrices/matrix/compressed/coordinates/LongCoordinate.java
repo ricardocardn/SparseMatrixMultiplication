@@ -5,7 +5,7 @@ public class LongCoordinate extends Coordinate {
         super(i, j, value);
     }
 
-    public long getValue() {
+    public Long getValue() {
         return (Long) super.value;
     }
 }

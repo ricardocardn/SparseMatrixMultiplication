@@ -1,12 +1,12 @@
 package software.ulpgc.bigdata.matrices.matrix.compressed;
 
-import software.ulpgc.bigdata.matrices.Matrix;
+import software.ulpgc.bigdata.matrices.matrix.CompressedMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoordinateMatrix implements Matrix {
+public class CoordinateMatrix implements CompressedMatrix {
     private int size;
     private List<Coordinate> coordinates;
 

@@ -5,7 +5,7 @@ public class IntCoordinate extends Coordinate {
         super(i, j, value);
     }
 
-    public int getValue() {
+    public Integer getValue() {
         return (Integer) super.value;
     }
 }

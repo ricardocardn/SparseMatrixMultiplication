@@ -5,7 +5,7 @@ public class DoubleCoordinate extends Coordinate {
         super(i, j, value);
     }
 
-    public double getValue() {
+    public Double getValue() {
         return (Double) super.value;
     }
 }

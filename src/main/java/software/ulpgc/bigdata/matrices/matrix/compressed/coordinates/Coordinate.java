@@ -11,6 +11,12 @@ public abstract class Coordinate {
         this.value = value;
     }
 
+    public void transpose() {
+        int c = i;
+        i = j;
+        j = c;
+    }
+
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("i: ");
@@ -22,4 +28,6 @@ public abstract class Coordinate {
 
         return stringBuilder.toString();
     }
+
+    public abstract Object getValue();
 }
