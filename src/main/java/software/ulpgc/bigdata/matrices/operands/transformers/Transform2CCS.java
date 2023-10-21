@@ -12,9 +12,9 @@ import software.ulpgc.bigdata.matrices.operands.MatrixTransformer;
 public class Transform2CCS implements MatrixTransformer {
 
     @Override
-    public CompressedMatrix execute(Matrix matrix) {
-        if (! (matrix instanceof CompressedColMatrix)) return transform((CompressedMatrix) matrix);
-        else return (CompressedMatrix) matrix;
+    public CompressedColMatrix execute(Matrix matrix) {
+        if (! (matrix instanceof CompressedColMatrix)) return (CompressedColMatrix) transform((CompressedMatrix) matrix);
+        else return (CompressedColMatrix) matrix;
     }
 
     private CompressedMatrix transform(CompressedMatrix matrix) {

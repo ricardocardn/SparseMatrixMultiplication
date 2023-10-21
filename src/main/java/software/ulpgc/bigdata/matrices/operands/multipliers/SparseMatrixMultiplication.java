@@ -20,8 +20,8 @@ public class SparseMatrixMultiplication implements MatrixMultiplication {
         List<Integer> aRowPtr = getRowPointer((CompressedRowMatrix) matrixA);
         List<Integer> bColPtr = getColPointer((CompressedColMatrix) matrixB);
 
-        List<Coordinate> aCoordinates = matrixA.get();
-        List<Coordinate> bCoordinates = matrixB.get();
+        List<Coordinate> aCoordinates = ((CompressedRowMatrix) matrixA).get();
+        List<Coordinate> bCoordinates = ((CompressedColMatrix) matrixB).get();
 
         for (int i=0; i<matrixA.size(); i++) {
             for (int j=0; j<matrixB.size(); j++) {
@@ -38,7 +38,7 @@ public class SparseMatrixMultiplication implements MatrixMultiplication {
                     int bb = bCoordinates.get(jj).i;
 
                     if (aa == bb) {
-                        s += (Long) aCoordinates.get(ii).value * (Long) bCoordinates.get(jj).value;
+                        s += (Double) aCoordinates.get(ii).value * (Double) bCoordinates.get(jj).value;
                         ii++;
                         jj++;
                     }

@@ -1,46 +1,83 @@
 package software.ulpgc.bigdata.matrices.tests.multiplication;
 
+import org.testng.annotations.Test;
 import software.ulpgc.bigdata.matrices.CompressedMatrixBuilder;
+import software.ulpgc.bigdata.matrices.MatrixLoader;
+import software.ulpgc.bigdata.matrices.Operator;
 import software.ulpgc.bigdata.matrices.matrix.CompressedMatrix;
 import software.ulpgc.bigdata.matrices.MatrixBuilder;
 import software.ulpgc.bigdata.matrices.builders.CompressedColMatrixBuilder;
 import software.ulpgc.bigdata.matrices.builders.CompressedRowMatrixBuilder;
+import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.LongCoordinate;
 import software.ulpgc.bigdata.matrices.operands.multipliers.SparseMatrixMultiplication;
+import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CCS;
+import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CRS;
+
+import java.util.Arrays;
+
+import static org.junit.Assert.assertArrayEquals;
 
 public class MultiplicationTests {
-    public static void main(String[] args) {
-        CompressedMatrix compressedRowMatrix = defineCompressedRowMatrix();
-        CompressedMatrix compressedColMatrix = defineCompressedColMatrix();
+    /*CompressedMatrix matrixA = MatrixLoader.loadMatrix("src/test/resources/Tina_AskCal.mtx");
+    CompressedMatrix matrixB = MatrixLoader.loadMatrix("src/test/resources/Tina_AskCog.mtx");
+    CompressedMatrix matrixC = MatrixLoader.loadMatrix("src/test/resources/Tina_DisCal.mtx");*/
+    CompressedMatrix matrixD = MatrixLoader.loadMatrix("src/test/resources/Example.mtx");
+    CompressedMatrix matrixE = MatrixLoader.loadMatrix("src/test/resources/Example2.mtx");
+    CompressedMatrix matrixF = MatrixLoader.loadMatrix("src/test/resources/Example3.mtx");
 
-        System.out.println((new SparseMatrixMultiplication()).multiply(
-                compressedRowMatrix,
-                compressedColMatrix
-        ).get().toString());
+    SparseMatrixMultiplication sparseMatrixMultiplication = new SparseMatrixMultiplication();
+
+
+    @Test
+    public void squareTest() {
+        System.out.println(matrixD.get());
+
+        CompressedMatrix resultDE = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(matrixD),
+                (new Transform2CCS()).execute(matrixE));
+
+        CompressedMatrix resultDE_F = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(resultDE),
+                (new Transform2CCS()).execute(matrixF));
+
+        CompressedMatrix resultEF = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(matrixE),
+                (new Transform2CCS()).execute(matrixF));
+
+        CompressedMatrix resultD_EF = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(matrixD),
+                (new Transform2CCS()).execute(resultEF));
+
+        System.out.println(resultD_EF.get());
+        System.out.println(resultDE_F.get());
+
+        assert Arrays.deepEquals(resultD_EF.get().toArray(), resultDE_F.get().toArray());
     }
 
-    private static CompressedMatrix defineCompressedRowMatrix() {
-        CompressedMatrixBuilder compressedRowMatrixBuilder = new CompressedRowMatrixBuilder(3);
-        fillMatrix(compressedRowMatrixBuilder);
+    /*@Test
+    public void associativePropertyTest() {
+        CompressedMatrix resultAB = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(matrixA),
+                (new Transform2CCS()).execute(matrixB));
 
-        CompressedMatrix compressedRowMatrix = compressedRowMatrixBuilder.getMatrix();
-        System.out.println(compressedRowMatrix.get().toString());
-        return compressedRowMatrix;
-    }
+        CompressedMatrix resultAB_C = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(resultAB),
+                (new Transform2CCS()).execute(matrixC));
 
-    private static CompressedMatrix defineCompressedColMatrix() {
-        CompressedMatrixBuilder compressedColMatrixBuilder = new CompressedColMatrixBuilder(3);
-        fillMatrix(compressedColMatrixBuilder);
+        System.out.println(resultAB_C.get());
 
-        CompressedMatrix compressedColMatrix = compressedColMatrixBuilder.getMatrix();
-        System.out.println(compressedColMatrix.get().toString());
-        return compressedColMatrix;
-    }
+        CompressedMatrix resultBC = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(matrixB),
+                (new Transform2CCS()).execute(matrixC));
 
-    private static void fillMatrix(MatrixBuilder matrixBuilder) {
-        matrixBuilder.set(new LongCoordinate(1,2,4));
-        matrixBuilder.set(new LongCoordinate(1,1,1));
-        matrixBuilder.set(new LongCoordinate(0,0,1));
-        matrixBuilder.set(new LongCoordinate(2,2,3));
-    }
+        CompressedMatrix resultA_BC = sparseMatrixMultiplication.multiply(
+                (new Transform2CRS()).execute(matrixA),
+                (new Transform2CCS()).execute(resultBC));
+
+        System.out.println(resultA_BC.get());
+
+
+        //assertArrayEquals(resultA_BC.get().toArray(),resultAB_C.get().toArray());
+    }*/
 }
