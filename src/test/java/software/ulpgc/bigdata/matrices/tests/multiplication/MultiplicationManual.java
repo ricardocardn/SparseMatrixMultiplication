@@ -7,8 +7,7 @@ import software.ulpgc.bigdata.matrices.MatrixBuilder;
 import software.ulpgc.bigdata.matrices.builders.CompressedColMatrixBuilder;
 import software.ulpgc.bigdata.matrices.builders.CompressedRowMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
-import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.DoubleCoordinate;
-import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.LongCoordinate;
+import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import software.ulpgc.bigdata.matrices.operands.multipliers.SparseMatrixMultiplication;
 import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CCS;
 import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CRS;
@@ -43,9 +42,9 @@ public class MultiplicationManual {
     }
 
     private static void fillMatrix(MatrixBuilder matrixBuilder) {
-        matrixBuilder.set(new DoubleCoordinate(1,2,4));
-        matrixBuilder.set(new DoubleCoordinate(1,1,1));
-        matrixBuilder.set(new DoubleCoordinate(0,0,1));
-        matrixBuilder.set(new DoubleCoordinate(2,2,3));
+        matrixBuilder.set(new Coordinate(1,2,4));
+        matrixBuilder.set(new Coordinate(1,1,1));
+        matrixBuilder.set(new Coordinate(0,0,1));
+        matrixBuilder.set(new Coordinate(2,2,3));
     }
 }

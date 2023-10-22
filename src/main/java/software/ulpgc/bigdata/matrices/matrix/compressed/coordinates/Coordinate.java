@@ -1,11 +1,11 @@
 package software.ulpgc.bigdata.matrices.matrix.compressed.coordinates;
 
-public abstract class Coordinate implements Comparable {
+public class Coordinate implements Comparable {
     public int i;
     public int j;
-    public Object value;
+    public double value;
 
-    public Coordinate(int i, int j, Object value) {
+    public Coordinate(int i, int j, double value) {
         this.i = i;
         this.j = j;
         this.value = value;
@@ -28,8 +28,6 @@ public abstract class Coordinate implements Comparable {
 
         return stringBuilder.toString();
     }
-
-    public abstract Object getValue();
 
     @Override
     public int compareTo(Object object) {

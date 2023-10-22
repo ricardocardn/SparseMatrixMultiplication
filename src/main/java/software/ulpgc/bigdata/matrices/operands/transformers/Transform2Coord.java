@@ -7,7 +7,6 @@ import software.ulpgc.bigdata.matrices.builders.CoordinateMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
-import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.LongCoordinate;
 import software.ulpgc.bigdata.matrices.matrix.dense.DenseMatrix;
 import software.ulpgc.bigdata.matrices.operands.MatrixTransformer;
 
@@ -24,7 +23,7 @@ public class Transform2Coord implements MatrixTransformer {
         for (int i = 0; i < matrix.size(); i++) {
             for (int j = 0; j < matrix.size(); j++) {
                 compressedMatrixBuilder.set(
-                        new LongCoordinate(i, j, matrix.get()[i][j])
+                        new Coordinate(i, j, matrix.get()[i][j])
                 );
             }
         }

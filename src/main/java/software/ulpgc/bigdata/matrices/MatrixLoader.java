@@ -6,8 +6,7 @@ import software.ulpgc.bigdata.matrices.builders.CoordinateMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.CompressedMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedRowMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
-import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.DoubleCoordinate;
-import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.LongCoordinate;
+import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -43,7 +42,7 @@ public class MatrixLoader {
     private static void addCoordinates(CompressedMatrixBuilder compressedMatrixBuilder, String line) {
         String[] coordinates = line.split(" ");
         compressedMatrixBuilder.set(
-                new DoubleCoordinate(
+                new Coordinate(
                         Integer.parseInt(coordinates[0]),
                         Integer.parseInt(coordinates[1]),
                         Double.parseDouble(coordinates[2])

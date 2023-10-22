@@ -8,17 +8,17 @@ import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import java.util.List;
 
 public class DenseMatrix implements StandardMatrix {
-    private long[][] matrix;
-    private int size;
+    private final Double[][] matrix;
+    private final int size;
 
     public DenseMatrix(int size) {
         this.size = size;
-        matrix = new long[size][size];
+        matrix = new Double[size][size];
     }
 
     @Override
     public void set(Coordinate coordinate) {
-        matrix[coordinate.i][coordinate.j] = (Long) coordinate.value;
+        matrix[coordinate.i][coordinate.j] = coordinate.value;
     }
 
     @Override
@@ -27,7 +27,7 @@ public class DenseMatrix implements StandardMatrix {
     }
 
     @Override
-    public long[][] get() {
+    public Double[][] get() {
         return matrix;
     }
 }

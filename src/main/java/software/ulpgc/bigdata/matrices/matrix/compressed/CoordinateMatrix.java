@@ -6,18 +6,14 @@ import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CoordinateMatrix implements CompressedMatrix {
-    private int size;
-    private List<Coordinate> coordinates;
-
+public class CoordinateMatrix extends SparseMatrix {
     public CoordinateMatrix(int size) {
-        this.size = size;
-        this.coordinates = new ArrayList<>();
+        super(size);
     }
 
     @Override
     public void set(Coordinate coordinate) {
-        coordinates.add(coordinate);
+        super.coordinateList.add(coordinate);
     }
 
     @Override
@@ -26,6 +22,6 @@ public class CoordinateMatrix implements CompressedMatrix {
     }
 
     public List<Coordinate> get() {
-        return coordinates;
+        return super.coordinateList;
     }
 }

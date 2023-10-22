@@ -5,7 +5,6 @@ import software.ulpgc.bigdata.matrices.builders.CompressedRowMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedRowMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
-import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.DoubleCoordinate;
 import software.ulpgc.bigdata.matrices.operands.MatrixMultiplication;
 
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class SparseMatrixMultiplication implements MatrixMultiplication {
     @Override
     public CompressedMatrix multiply(CompressedMatrix matrixA, CompressedMatrix matrixB) {
         CompressedRowMatrixBuilder compressedRowMatrixBuilder = new CompressedRowMatrixBuilder(matrixA.size());
-        matrixA = (CompressedRowMatrix) matrixA;
 
         List<Integer> aRowPtr = getRowPointer((CompressedRowMatrix) matrixA);
         List<Integer> bColPtr = getColPointer((CompressedColMatrix) matrixB);
@@ -38,7 +36,7 @@ public class SparseMatrixMultiplication implements MatrixMultiplication {
                     int bb = bCoordinates.get(jj).i;
 
                     if (aa == bb) {
-                        s += (Double) aCoordinates.get(ii).value * (Double) bCoordinates.get(jj).value;
+                        s += aCoordinates.get(ii).value * bCoordinates.get(jj).value;
                         ii++;
                         jj++;
                     }
@@ -46,7 +44,7 @@ public class SparseMatrixMultiplication implements MatrixMultiplication {
                     else jj++;
                 }
 
-                if (s != 0) compressedRowMatrixBuilder.set(new DoubleCoordinate(i,j,s));
+                if (s != 0) compressedRowMatrixBuilder.set(new Coordinate(i,j,s));
             }
         }
 
