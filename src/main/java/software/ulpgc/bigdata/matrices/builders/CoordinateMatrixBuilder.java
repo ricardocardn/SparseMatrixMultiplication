@@ -1,25 +1,29 @@
 package software.ulpgc.bigdata.matrices.builders;
 
-import software.ulpgc.bigdata.matrices.CompressedMatrixBuilder;
-import software.ulpgc.bigdata.matrices.matrix.CompressedMatrix;
 import software.ulpgc.bigdata.matrices.MatrixBuilder;
+import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 
-public class CoordinateMatrixBuilder implements CompressedMatrixBuilder {
-    private CompressedMatrix matrix;
+import java.util.ArrayList;
+import java.util.List;
+
+public class CoordinateMatrixBuilder<Type> implements MatrixBuilder<Type> {
+    private final List<Coordinate<Type>> coordinateList;
+    private final int size;
 
     public CoordinateMatrixBuilder(int size) {
-        this.matrix = new CoordinateMatrix(size);
+        coordinateList = new ArrayList<>();
+        this.size = size;
     }
 
     @Override
-    public void set(Coordinate coordinate) {
-        matrix.set(coordinate);
+    public void set(Coordinate<Type> coordinate) {
+        coordinateList.add(coordinate);
     }
 
     @Override
-    public CompressedMatrix getMatrix() {
-        return matrix;
+    public CoordinateMatrix<Type> get() {
+        return new CoordinateMatrix<>(size,coordinateList);
     }
 }

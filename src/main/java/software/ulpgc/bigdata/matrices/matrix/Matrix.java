@@ -1,8 +1,6 @@
 package software.ulpgc.bigdata.matrices.matrix;
 
-import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
-
-public interface Matrix {
-    void set(Coordinate coordinate);
+public interface Matrix<Type> {
+    Type get(int i, int j);
     int size();
 }

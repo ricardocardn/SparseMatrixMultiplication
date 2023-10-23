@@ -1,28 +1,39 @@
 package software.ulpgc.bigdata.matrices.operands.transformers;
 
-import software.ulpgc.bigdata.matrices.CompressedMatrixBuilder;
-import software.ulpgc.bigdata.matrices.matrix.CompressedMatrix;
 import software.ulpgc.bigdata.matrices.MatrixBuilder;
-import software.ulpgc.bigdata.matrices.builders.CompressedColMatrixBuilder;
+import software.ulpgc.bigdata.matrices.builders.CompressedColumnMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
-import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColMatrix;
+import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColumnMatrix;
+import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedRowMatrix;
+import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import software.ulpgc.bigdata.matrices.operands.MatrixTransformer;
 
-public class Transform2CCS implements MatrixTransformer {
+public class Transform2CCS<Type> implements MatrixTransformer<Type> {
+    private final Transform2Coord<Type> transform2Coord;
 
-    @Override
-    public CompressedColMatrix execute(Matrix matrix) {
-        if (! (matrix instanceof CompressedColMatrix)) return (CompressedColMatrix) transform((CompressedMatrix) matrix);
-        else return (CompressedColMatrix) matrix;
+    public Transform2CCS(){
+        this.transform2Coord = new Transform2Coord<>();
     }
 
-    private CompressedMatrix transform(CompressedMatrix matrix) {
-        CompressedMatrixBuilder compressedColMatrixBuilder = new CompressedColMatrixBuilder(matrix.size());
-        for (Coordinate coordinate : matrix.get()) {
-            compressedColMatrixBuilder.set(coordinate);
-        }
+    @Override
+    public CompressedColumnMatrix<Type> execute(Matrix<Type> matrix) {
+        if (matrix instanceof CoordinateMatrix) return transformFromCoordinates(matrix);
+        else if (matrix instanceof CompressedRowMatrix) return transformFromCRS(matrix);
+        else return (CompressedColumnMatrix<Type>) matrix;
+    }
 
-        return compressedColMatrixBuilder.getMatrix();
+    private CompressedColumnMatrix<Type> transformFromCoordinates(Matrix<Type> matrix) {
+        MatrixBuilder<Type> matrixBuilder = new CompressedColumnMatrixBuilder<>(matrix.size());
+        for (Coordinate<Type> coordinate : ((CoordinateMatrix<Type>) matrix).get()) {
+            matrixBuilder.set(coordinate);
+        }
+        return (CompressedColumnMatrix<Type>) matrixBuilder.get();
+    }
+
+
+    private CompressedColumnMatrix<Type> transformFromCRS(Matrix<Type> matrix) {
+        CoordinateMatrix<Type> coordinateMatrix = transform2Coord.execute(matrix);
+        return transformFromCoordinates(coordinateMatrix);
     }
 }

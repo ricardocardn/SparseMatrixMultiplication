@@ -1,18 +1,18 @@
 package software.ulpgc.bigdata.matrices.builders;
 
 import software.ulpgc.bigdata.matrices.MatrixBuilder;
+import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColumnMatrix;
-import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedRowMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CompressedRowMatrixBuilder<Type> implements MatrixBuilder<Type> {
+public class CompressedColumnMatrixBuilder<Type> implements MatrixBuilder<Type> {
     private final List<Coordinate<Type>> coordinateList;
     private final int size;
 
-    public CompressedRowMatrixBuilder(int size) {
+    public CompressedColumnMatrixBuilder(int size) {
         this.coordinateList = new ArrayList<>();
         this.size = size;
     }
@@ -23,40 +23,40 @@ public class CompressedRowMatrixBuilder<Type> implements MatrixBuilder<Type> {
     }
 
     @Override
-    public CompressedRowMatrix<Type> get() {
-        coordinateList.sort((c1, c2) -> c1.i - c2.i == 0 ? c1.j - c2.j : c1.i - c2.i);
-        List<Integer> rowPointer = getRowPointer();
+    public CompressedColumnMatrix<Type> get() {
+        coordinateList.sort((c1, c2) -> c1.j - c2.j == 0 ? c1.i - c2.i : c1.j - c2.j);
+        List<Integer> columnPointer = getColPointer();
 
-        List<Integer> cols = new ArrayList<>();
+        List<Integer> rows = new ArrayList<>();
         List<Type> values = new ArrayList<>();
 
         for (Coordinate<Type> coordinate : coordinateList) {
-            cols.add(coordinate.j);
+            rows.add(coordinate.i);
             values.add(coordinate.value);
         }
 
-        return new CompressedRowMatrix<>(size, rowPointer, cols, values);
+        return new CompressedColumnMatrix<>(size, columnPointer, rows, values);
     }
 
-    public List<Integer> getRowPointer() {
-        List<Integer> rowPointer = new ArrayList<>();
+    public List<Integer> getColPointer() {
+        List<Integer> columnPointer = new ArrayList<>();
 
         int i = 0;
         int cur = 0;
-        rowPointer.add(i);
+        columnPointer.add(i);
 
         for (Coordinate<Type> coordinate : coordinateList) {
-            if (coordinate.i != cur) {
-                for (int j = 0; j < (coordinate.i - cur); j++)
-                    rowPointer.add(i);
-                cur = coordinate.i;
+            if (coordinate.j != cur) {
+                for (int j = 0; j < (coordinate.j - cur); j++)
+                    columnPointer.add(i);
+                cur = coordinate.j;
             }
             i++;
         }
 
         for (int j = 0; j < size; j++)
-            rowPointer.add(i);
+            columnPointer.add(i);
 
-        return rowPointer;
+        return columnPointer;
     }
 }

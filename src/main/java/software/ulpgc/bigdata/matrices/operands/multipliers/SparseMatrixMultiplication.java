@@ -1,8 +1,9 @@
 package software.ulpgc.bigdata.matrices.operands.multipliers;
 
-import software.ulpgc.bigdata.matrices.matrix.CompressedMatrix;
+import software.ulpgc.bigdata.matrices.builders.CoordinateMatrixBuilder;
 import software.ulpgc.bigdata.matrices.builders.CompressedRowMatrixBuilder;
-import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColMatrix;
+import software.ulpgc.bigdata.matrices.matrix.Matrix;
+import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColumnMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedRowMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import software.ulpgc.bigdata.matrices.operands.MatrixMultiplication;
@@ -10,87 +11,40 @@ import software.ulpgc.bigdata.matrices.operands.MatrixMultiplication;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SparseMatrixMultiplication implements MatrixMultiplication {
+public class SparseMatrixMultiplication<Type> implements MatrixMultiplication<Type> {
     @Override
-    public CompressedMatrix multiply(CompressedMatrix matrixA, CompressedMatrix matrixB) {
-        CompressedRowMatrixBuilder compressedRowMatrixBuilder = new CompressedRowMatrixBuilder(matrixA.size());
-
-        List<Integer> aRowPtr = getRowPointer((CompressedRowMatrix) matrixA);
-        List<Integer> bColPtr = getColPointer((CompressedColMatrix) matrixB);
-
-        List<Coordinate> aCoordinates = ((CompressedRowMatrix) matrixA).get();
-        List<Coordinate> bCoordinates = ((CompressedColMatrix) matrixB).get();
+    public Matrix<Type> multiply(CompressedRowMatrix<Type> matrixA, CompressedColumnMatrix<Type> matrixB) {
+        CoordinateMatrixBuilder<Type> matrixBuilder = new CoordinateMatrixBuilder<>(matrixA.size());
 
         for (int i=0; i<matrixA.size(); i++) {
             for (int j=0; j<matrixB.size(); j++) {
-                int ii = aRowPtr.get(i);
-                int iEnd = aRowPtr.get(i+1);
+                int ii = matrixA.getRowPointer().get(i);
+                int iEnd = matrixA.getRowPointer().get(i+1);
 
-                int jj = bColPtr.get(j);
-                int jEnd = bColPtr.get(j+1);
+                int jj = matrixB.getColPointer().get(j);
+                int jEnd = matrixB.getColPointer().get(j+1);
 
-                long s = 0;
+                Double s = (double) 0;
 
                 while (ii < iEnd && jj < jEnd) {
-                    int aa = aCoordinates.get(ii).j;
-                    int bb = bCoordinates.get(jj).i;
+                    int column = matrixA.getColumns().get(ii);
+                    int row = matrixB.getRows().get(jj);
 
-                    if (aa == bb) {
-                        s += aCoordinates.get(ii).value * bCoordinates.get(jj).value;
+                    if (column == row) {
+                        s += (Double) matrixA.getValues().get(ii) * (Double) matrixB.getValues().get(jj);
                         ii++;
                         jj++;
                     }
-                    else if (aa < bb) ii++;
+                    else if (column < row) ii++;
                     else jj++;
                 }
 
-                if (s != 0) compressedRowMatrixBuilder.set(new Coordinate(i,j,s));
+                if (s != 0) {
+                    matrixBuilder.set(new Coordinate<>(i, j, (Type) s));
+                }
             }
         }
 
-        return compressedRowMatrixBuilder.getMatrix();
-    }
-
-    public List<Integer> getRowPointer(CompressedRowMatrix matrix) {
-        List<Integer> rowPointer = new ArrayList<>();
-
-        int i = 0;
-        int cur = 0;
-        rowPointer.add(i);
-
-        for (Coordinate coordinate : matrix.get()) {
-            if (coordinate.i != cur) {
-                for (int j = 0; j < (coordinate.i - cur); j++)
-                    rowPointer.add(i);
-                cur = coordinate.i;
-            }
-            i++;
-        }
-
-        for (int j = 0; j < matrix.size(); j++)
-            rowPointer.add(i);
-        return rowPointer;
-    }
-
-    public List<Integer> getColPointer(CompressedColMatrix matrix) {
-        List<Integer> colPointer = new ArrayList<>();
-
-        int i = 0;
-        int cur = 0;
-        colPointer.add(i);
-
-        for (Coordinate coordinate : matrix.get()) {
-            if (coordinate.j != cur) {
-                for (int j = 0; j < (coordinate.j - cur); j++)
-                    colPointer.add(i);
-                cur = coordinate.j;
-            }
-            i++;
-        }
-
-        for (int j = 0; j < matrix.size(); j++)
-            colPointer.add(i);
-
-        return colPointer;
+        return matrixBuilder.get();
     }
 }
