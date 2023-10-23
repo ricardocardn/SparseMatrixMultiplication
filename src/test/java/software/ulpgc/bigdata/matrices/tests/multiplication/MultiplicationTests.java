@@ -1,5 +1,6 @@
 package software.ulpgc.bigdata.matrices.tests.multiplication;
 
+import org.junit.Assert;
 import org.testng.annotations.Test;
 import software.ulpgc.bigdata.matrices.MatrixLoader;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
@@ -14,6 +15,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
+import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
 public class MultiplicationTests {
@@ -59,11 +61,11 @@ public class MultiplicationTests {
 
     @Test
     public void largeAssociativeTest() {
-        assert associativeProperty(matrixA, matrixB, matrixC);
+        associativeProperty(matrixA, matrixB, matrixC);
     }
 
 
-    public boolean associativeProperty(Matrix<Double> matrixA, Matrix<Double> matrixB, Matrix<Double> matrixC) {
+    public void associativeProperty(Matrix<Double> matrixA, Matrix<Double> matrixB, Matrix<Double> matrixC) {
         Matrix<Double> resultDE = sparseMatrixMultiplication.multiply(
                 (new Transform2CRS<Double>()).execute(matrixA),
                 (new Transform2CCS<Double>()).execute(matrixB));
@@ -80,10 +82,10 @@ public class MultiplicationTests {
                 (new Transform2CRS<Double>()).execute(matrixA),
                 (new Transform2CCS<Double>()).execute(resultEF));
 
-        matrixLoader.saveToFile((CoordinateMatrix<Double>) resultD_EF, "resultD_EF");
-        matrixLoader.saveToFile((CoordinateMatrix<Double>) resultDE_F, "resultDE_F");
+        //matrixLoader.saveToFile((CoordinateMatrix<Double>) resultD_EF, "resultD_EF");
+        //matrixLoader.saveToFile((CoordinateMatrix<Double>) resultDE_F, "resultDE_F");
 
-        return Arrays.deepEquals(((CoordinateMatrix<Double>) resultD_EF).get().toArray(),
+        Assert.assertArrayEquals(((CoordinateMatrix<Double>) resultD_EF).get().toArray(),
                 ((CoordinateMatrix<Double>) resultDE_F).get().toArray());
     }
 }
