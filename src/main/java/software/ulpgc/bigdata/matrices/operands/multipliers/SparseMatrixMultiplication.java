@@ -1,19 +1,29 @@
 package software.ulpgc.bigdata.matrices.operands.multipliers;
 
 import software.ulpgc.bigdata.matrices.builders.CoordinateMatrixBuilder;
-import software.ulpgc.bigdata.matrices.builders.CompressedRowMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColumnMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedRowMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import software.ulpgc.bigdata.matrices.operands.MatrixMultiplication;
-
-import java.util.ArrayList;
-import java.util.List;
+import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CCS;
+import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CRS;
 
 public class SparseMatrixMultiplication<Type> implements MatrixMultiplication<Type> {
+    private final Transform2CCS<Type> transform2CCS;
+    private final Transform2CRS<Type> transform2CRS;
+
+    public SparseMatrixMultiplication() {
+        this.transform2CCS = new Transform2CCS<>();
+        this.transform2CRS = new Transform2CRS<>();
+    }
+
+
     @Override
-    public Matrix<Type> multiply(CompressedRowMatrix<Type> matrixA, CompressedColumnMatrix<Type> matrixB) {
+    public Matrix<Type> multiply(Matrix<Type> A, Matrix<Type> B) {
+        CompressedRowMatrix<Type> matrixA = transform2CRS.execute(A);
+        CompressedColumnMatrix<Type> matrixB = transform2CCS.execute(B);
+
         CoordinateMatrixBuilder<Type> matrixBuilder = new CoordinateMatrixBuilder<>(matrixA.size());
 
         for (int i=0; i<matrixA.size(); i++) {

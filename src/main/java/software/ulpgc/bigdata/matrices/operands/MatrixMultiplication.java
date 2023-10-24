@@ -5,5 +5,5 @@ import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedColumnMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CompressedRowMatrix;
 
 public interface MatrixMultiplication<Type> {
-    Matrix<Type> multiply(CompressedRowMatrix<Type> matrixA, CompressedColumnMatrix<Type> matrixB);
+    Matrix<Type> multiply(Matrix<Type> matrixA, Matrix<Type> matrixB);
 }
