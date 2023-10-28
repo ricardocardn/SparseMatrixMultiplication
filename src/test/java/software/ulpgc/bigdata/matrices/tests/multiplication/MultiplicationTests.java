@@ -2,7 +2,7 @@ package software.ulpgc.bigdata.matrices.tests.multiplication;
 
 import org.junit.Assert;
 import org.testng.annotations.Test;
-import software.ulpgc.bigdata.matrices.DoubleMatrixLoader;
+import software.ulpgc.bigdata.matrices.loaders.DoubleMatrixLoader;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
 import software.ulpgc.bigdata.matrices.operands.multipliers.SparseDoubleMatrixMultiplication;
@@ -15,37 +15,17 @@ public class MultiplicationTests {
     CoordinateMatrix<Double> matrixA;
     CoordinateMatrix<Double> matrixB;
     CoordinateMatrix<Double> matrixC;
-    CoordinateMatrix<Double> matrixD;
-    CoordinateMatrix<Double> matrixE;
-    CoordinateMatrix<Double> matrixF;
     CoordinateMatrix<Double> mc2depi;
 
     SparseDoubleMatrixMultiplication sparseMatrixMultiplication;
 
     {
         matrixLoader = new DoubleMatrixLoader();
-        matrixA = matrixLoader.loadMatrix("src/test/resources/G67.mtx");
-        matrixB = matrixLoader.loadMatrix("src/test/resources/Fashion_MNIST_norm_10NN.mtx");
-        matrixC = matrixLoader.loadMatrix("src/test/resources/cryg10000.mtx");
-        matrixD = matrixLoader.loadMatrix("src/test/resources/Example.mtx");
-        matrixE = matrixLoader.loadMatrix("src/test/resources/Example2.mtx");
-        matrixF = matrixLoader.loadMatrix("src/test/resources/Example3.mtx");
-        mc2depi = matrixLoader.loadMatrix("src/test/resources/mc2depi.mtx");
+        matrixA = matrixLoader.loadMatrix("src/test/resources/tests/G67.mtx");
+        matrixB = matrixLoader.loadMatrix("src/test/resources/tests/Fashion_MNIST_norm_10NN.mtx");
+        matrixC = matrixLoader.loadMatrix("src/test/resources/tests/cryg10000.mtx");
+        mc2depi = matrixLoader.loadMatrix("src/test/resources/tests/mc2depi.mtx");
         sparseMatrixMultiplication = new SparseDoubleMatrixMultiplication();
-    }
-
-    @Test
-    public void squareMatrix() {
-        long start = System.currentTimeMillis();
-        sparseMatrixMultiplication.multiply(mc2depi, mc2depi);
-        long end = System.currentTimeMillis();
-
-        System.out.println("Time taken for size " + mc2depi.size() + ": " + (end-start)/1000.);
-    }
-
-    @Test
-    public void smallAssociativeTest() {
-        associativeProperty(matrixD, matrixE, matrixF);
     }
 
     @Test

@@ -26,11 +26,11 @@ public class Transform2Coord<Type> implements MatrixTransformer<Type> {
         CoordinateMatrixBuilder<Type> matrixBuilder = new CoordinateMatrixBuilder<>(matrix.size());
 
         for (int i=0; i<matrix.size(); i++)
-            for (int j=matrix.getColPointer().get(i); j<matrix.getColPointer().get(i+1); j++)
+            for (int j=matrix.colPointer[i]; j<matrix.colPointer[i+1]; j++)
                 matrixBuilder.set(new Coordinate<>(
-                        matrix.getRows().get(j),
+                        matrix.rows[j],
                         i,
-                        matrix.getValues().get(j)
+                        matrix.values.get(j)
                 ));
 
         return matrixBuilder.get();
@@ -40,11 +40,11 @@ public class Transform2Coord<Type> implements MatrixTransformer<Type> {
         CoordinateMatrixBuilder<Type> matrixBuilder = new CoordinateMatrixBuilder<>(matrix.size());
 
         for (int i=0; i<matrix.size(); i++)
-            for (int j=matrix.getRowPointer().get(i); j<matrix.getRowPointer().get(i+1); j++)
+            for (int j=matrix.rowPointer[i]; j<matrix.rowPointer[i+1]; j++)
                 matrixBuilder.set(new Coordinate<>(
                         i,
-                        matrix.getColumns().get(j),
-                        matrix.getValues().get(j)
+                        matrix.columns[j],
+                        matrix.values.get(j)
                 ));
 
         return matrixBuilder.get();

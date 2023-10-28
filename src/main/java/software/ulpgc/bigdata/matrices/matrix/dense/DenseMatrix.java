@@ -16,7 +16,8 @@ public class DenseMatrix<Type> implements Matrix<Type> {
 
     @Override
     public Type get(int i, int j) {
-        return (Type) matrix[i][j];
+        System.out.println(matrix[0][0]);
+        return matrix[0][0];
     }
 
     @Override

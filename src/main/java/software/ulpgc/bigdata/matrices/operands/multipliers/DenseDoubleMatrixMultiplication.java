@@ -4,21 +4,28 @@ import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import software.ulpgc.bigdata.matrices.matrix.dense.DenseMatrix;
 import software.ulpgc.bigdata.matrices.operands.MatrixMultiplication;
+import software.ulpgc.bigdata.matrices.operands.transformers.Transform2Dense;
 
 public class DenseDoubleMatrixMultiplication implements MatrixMultiplication<Double> {
-    public DenseDoubleMatrixMultiplication() {}
+    private final Transform2Dense<Double> transform2Dense;
+
+    public DenseDoubleMatrixMultiplication() {
+        transform2Dense = new Transform2Dense<>();
+    }
 
     @Override
     public Matrix<Double> multiply(Matrix<Double> A, Matrix<Double> B) {
-        DenseMatrix<Double> matrixA = (DenseMatrix<Double>) A;
-        DenseMatrix<Double> matrixB = (DenseMatrix<Double>) B;
+        DenseMatrix<Double> matrixA = transform2Dense.execute(A);
+        DenseMatrix<Double> matrixB = transform2Dense.execute(B);
 
-        Double[][] result = new Double[A.size()][A.size()];
+        System.out.println(matrixA.size());
+        Double[][] result = new Double[matrixA.size()][matrixB.size()];
 
         for (int i=0; i<matrixA.size(); i++)
              for (int k=0; k<matrixA.size(); k++)
-                 for (int j=0; j<matrixA.size(); j++)
-                     result[i][j] += matrixA.get(i,j)*matrixB.get(i,j);
+                 for (int j=0; j<matrixA.size(); j++) {
+                     result[i][j] = result[i][j] + matrixA.get(i,k)* matrixB.get(k,j);
+                 }
 
         return new DenseMatrix<>(A.size(), result);
     }

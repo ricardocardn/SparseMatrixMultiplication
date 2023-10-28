@@ -1,5 +1,6 @@
-package software.ulpgc.bigdata.matrices;
+package software.ulpgc.bigdata.matrices.loaders;
 
+import software.ulpgc.bigdata.matrices.MatrixBuilder;
 import software.ulpgc.bigdata.matrices.builders.CoordinateMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
@@ -8,11 +9,12 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.lang.reflect.Type;
 import java.util.Random;
 
-public class LongMatrixLoader {
-    public CoordinateMatrix<Long> loadMatrix(String filePath) {
-        CoordinateMatrixBuilder<Long> matrixBuilder = new CoordinateMatrixBuilder<>(0);
+public class DoubleMatrixLoader {
+    public CoordinateMatrix<Double> loadMatrix(String filePath) {
+        CoordinateMatrixBuilder<Double> matrixBuilder = new CoordinateMatrixBuilder<>(0);
 
         try {
             BufferedReader br = new BufferedReader(new FileReader(filePath));
@@ -35,31 +37,31 @@ public class LongMatrixLoader {
         return matrixBuilder.get();
     }
 
-    private void addCoordinates(MatrixBuilder<Long> matrixBuilder, String line) {
+    private void addCoordinates(MatrixBuilder<Double> matrixBuilder, String line) {
         String[] coordinates = line.split(" ");
         Random random = new Random();
-        long value;
+        double value;
         try {
-            value = Long.parseLong(coordinates[2]);
+            value = Double.parseDouble(coordinates[2]);
         } catch (ArrayIndexOutOfBoundsException e) {
-            value = random.nextLong();
+            value = random.nextDouble();
         }
 
-        matrixBuilder.set(new Coordinate<Long>(
-                        Integer.parseInt(coordinates[0]),
-                        Integer.parseInt(coordinates[1]),
+        matrixBuilder.set(new Coordinate<>(
+                        Integer.parseInt(coordinates[0]) - 1,
+                        Integer.parseInt(coordinates[1]) - 1,
                         value
                 )
         );
     }
 
-    public void saveToFile(CoordinateMatrix<Long> matrix, String fileName) {
+    public void saveToFile(CoordinateMatrix<Double> matrix, String fileName) {
         try {
             FileWriter fileWriter = new FileWriter(fileName);
             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
 
             int i = 0;
-            for (Coordinate<Long> doubleCoordinate : matrix.get()) {
+            for (Coordinate<Double> doubleCoordinate : matrix.get()) {
                 bufferedWriter.write(i + " " + doubleCoordinate.i + " " + doubleCoordinate.j + " " + doubleCoordinate.value + "\n");
                 i++;
             }

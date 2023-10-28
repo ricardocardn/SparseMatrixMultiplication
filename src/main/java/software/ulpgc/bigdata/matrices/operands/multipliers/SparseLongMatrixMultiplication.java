@@ -28,20 +28,20 @@ public class SparseLongMatrixMultiplication implements MatrixMultiplication<Long
 
         for (int i=0; i<matrixA.size(); i++) {
             for (int j=0; j<matrixB.size(); j++) {
-                int ii = matrixA.getRowPointer().get(i);
-                int iEnd = matrixA.getRowPointer().get(i+1);
+                int ii = matrixA.rowPointer[i];
+                int iEnd = matrixA.rowPointer[i+1];
 
-                int jj = matrixB.getColPointer().get(j);
-                int jEnd = matrixB.getColPointer().get(j+1);
+                int jj = matrixB.colPointer[j];
+                int jEnd = matrixB.colPointer[j+1];
 
                 long s = 0;
 
                 while (ii < iEnd && jj < jEnd) {
-                    int column = matrixA.getColumns().get(ii);
-                    int row = matrixB.getRows().get(jj);
+                    int column = matrixA.columns[ii];
+                    int row = matrixB.rows[jj];
 
                     if (column == row) {
-                        s += matrixA.getValues().get(ii) * matrixB.getValues().get(jj);
+                        s += matrixA.values.get(ii) * matrixB.getValues().get(jj);
                         ii++;
                         jj++;
                     }

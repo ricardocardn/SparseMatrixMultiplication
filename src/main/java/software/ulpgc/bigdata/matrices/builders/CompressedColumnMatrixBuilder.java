@@ -25,37 +25,39 @@ public class CompressedColumnMatrixBuilder<Type> implements MatrixBuilder<Type> 
     @Override
     public CompressedColumnMatrix<Type> get() {
         coordinateList.sort((c1, c2) -> c1.j - c2.j == 0 ? c1.i - c2.i : c1.j - c2.j);
-        List<Integer> columnPointer = getColPointer();
+        int[] columnPointer = getColPointer();
 
-        List<Integer> rows = new ArrayList<>();
+        int[] rows = new int[coordinateList.size()];
         List<Type> values = new ArrayList<>();
 
+        int i = 0;
         for (Coordinate<Type> coordinate : coordinateList) {
-            rows.add(coordinate.i);
+            rows[i] = coordinate.i;
             values.add(coordinate.value);
+
+            i++;
         }
 
         return new CompressedColumnMatrix<>(size, columnPointer, rows, values);
     }
 
-    public List<Integer> getColPointer() {
-        List<Integer> columnPointer = new ArrayList<>();
-
+    public int[] getColPointer() {
+        int[] columnPointer = new int[size + 1];
         int i = 0;
         int cur = 0;
-        columnPointer.add(i);
+        columnPointer[0] = 0;
 
         for (Coordinate<Type> coordinate : coordinateList) {
             if (coordinate.j != cur) {
                 for (int j = 0; j < (coordinate.j - cur); j++)
-                    columnPointer.add(i);
+                    columnPointer[cur + j + 1] = i;
                 cur = coordinate.j;
             }
             i++;
         }
 
-        for (int j = 0; j < size; j++)
-            columnPointer.add(i);
+        for (int j = cur; j < size; j++)
+            columnPointer[j + 1] = i;
 
         return columnPointer;
     }

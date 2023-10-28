@@ -1,17 +1,13 @@
 package software.ulpgc.bigdata.matrices.tests.multiplication.benchmarks;
 
 import org.testng.annotations.Test;
-import software.ulpgc.bigdata.matrices.DoubleMatrixLoader;
+import software.ulpgc.bigdata.matrices.loaders.DoubleMatrixLoader;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
-import software.ulpgc.bigdata.matrices.operands.multipliers.DenseDoubleMatrixMultiplication;
 import software.ulpgc.bigdata.matrices.operands.multipliers.SparseDoubleMatrixMultiplication;
-import software.ulpgc.bigdata.matrices.operands.transformers.Transform2Dense;
 
-public class DenseMultiplicationTimes {
+public class MultiplicationTimesTests {
     DoubleMatrixLoader matrixLoader;
-    Transform2Dense transform2Dense;
-
     CoordinateMatrix<Double> matrixA;
     CoordinateMatrix<Double> matrixB;
     CoordinateMatrix<Double> matrixC;
@@ -20,12 +16,10 @@ public class DenseMultiplicationTimes {
     CoordinateMatrix<Double> matrixF;
     CoordinateMatrix<Double> mc2depi;
 
-    DenseDoubleMatrixMultiplication denseDoubleMatrixMultiplication;
+    SparseDoubleMatrixMultiplication sparseMatrixMultiplication;
 
     {
         matrixLoader = new DoubleMatrixLoader();
-        transform2Dense = new Transform2Dense<>();
-
         matrixA = matrixLoader.loadMatrix("src/test/resources/benchmarks/delaunay_n12.mtx");
         matrixB = matrixLoader.loadMatrix("src/test/resources/benchmarks/delaunay_n14.mtx");
         matrixC = matrixLoader.loadMatrix("src/test/resources/benchmarks/delaunay_n16.mtx");
@@ -33,8 +27,7 @@ public class DenseMultiplicationTimes {
         matrixE = matrixLoader.loadMatrix("src/test/resources/benchmarks/dw1024.mtx");
         matrixF = matrixLoader.loadMatrix("src/test/resources/benchmarks/dw4096.mtx");
         mc2depi = matrixLoader.loadMatrix("src/test/resources/tests/mc2depi.mtx");
-
-        denseDoubleMatrixMultiplication = new DenseDoubleMatrixMultiplication();
+        sparseMatrixMultiplication = new SparseDoubleMatrixMultiplication();
     }
 
     @Test
@@ -75,9 +68,7 @@ public class DenseMultiplicationTimes {
 
     public void squareMatrix(Matrix<Double> matrix) {
         long start = System.currentTimeMillis();
-        denseDoubleMatrixMultiplication.multiply(
-                transform2Dense.execute(matrix),
-                transform2Dense.execute(matrix));
+        sparseMatrixMultiplication.multiply(matrix, matrix);
         long end = System.currentTimeMillis();
 
         System.out.println("Time taken for size " + matrix.size() + ": " + (end-start)/1000.);
