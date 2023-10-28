@@ -24,7 +24,8 @@ public class Coordinate<Type> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinate<?> that = (Coordinate<?>) o;
-        return i == that.i && j == that.j && Math.abs((Double) value - (Double) that.value) < 0.00000001;
+        return i == that.i && j == that.j && Math.abs(
+                ((Number) value).doubleValue() - ((Number) that.value).doubleValue()) < 1E-10;
     }
 
     @Override

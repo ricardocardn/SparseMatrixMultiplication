@@ -6,6 +6,7 @@ import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class CoordinateMatrix<Type> implements Matrix<Type> {
     final int size;
@@ -33,5 +34,18 @@ public class CoordinateMatrix<Type> implements Matrix<Type> {
 
     public List<Coordinate<Type>> get() {
         return coordinateList;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CoordinateMatrix<?> that = (CoordinateMatrix<?>) o;
+        return size == that.size && Objects.equals(coordinateList, that.coordinateList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(size, coordinateList);
     }
 }

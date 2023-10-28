@@ -2,18 +2,16 @@ package software.ulpgc.bigdata.matrices.tests.multiplication;
 
 import org.junit.Assert;
 import org.testng.annotations.Test;
-import software.ulpgc.bigdata.matrices.MatrixLoader;
+import software.ulpgc.bigdata.matrices.DoubleMatrixLoader;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
-import software.ulpgc.bigdata.matrices.operands.multipliers.SparseMatrixMultiplication;
-import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CCS;
-import software.ulpgc.bigdata.matrices.operands.transformers.Transform2CRS;
+import software.ulpgc.bigdata.matrices.operands.multipliers.SparseDoubleMatrixMultiplication;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.junit.Assert.assertArrayEquals;
 
 public class MultiplicationTests {
-    MatrixLoader<Double> matrixLoader;
+    DoubleMatrixLoader matrixLoader;
     CoordinateMatrix<Double> matrixA;
     CoordinateMatrix<Double> matrixB;
     CoordinateMatrix<Double> matrixC;
@@ -22,10 +20,10 @@ public class MultiplicationTests {
     CoordinateMatrix<Double> matrixF;
     CoordinateMatrix<Double> mc2depi;
 
-    SparseMatrixMultiplication<Double> sparseMatrixMultiplication;
+    SparseDoubleMatrixMultiplication sparseMatrixMultiplication;
 
     {
-        matrixLoader = new MatrixLoader<>();
+        matrixLoader = new DoubleMatrixLoader();
         matrixA = matrixLoader.loadMatrix("src/test/resources/G67.mtx");
         matrixB = matrixLoader.loadMatrix("src/test/resources/Fashion_MNIST_norm_10NN.mtx");
         matrixC = matrixLoader.loadMatrix("src/test/resources/cryg10000.mtx");
@@ -33,7 +31,7 @@ public class MultiplicationTests {
         matrixE = matrixLoader.loadMatrix("src/test/resources/Example2.mtx");
         matrixF = matrixLoader.loadMatrix("src/test/resources/Example3.mtx");
         mc2depi = matrixLoader.loadMatrix("src/test/resources/mc2depi.mtx");
-        sparseMatrixMultiplication = new SparseMatrixMultiplication<>();
+        sparseMatrixMultiplication = new SparseDoubleMatrixMultiplication();
     }
 
     @Test
@@ -47,7 +45,7 @@ public class MultiplicationTests {
 
     @Test
     public void smallAssociativeTest() {
-        //assert associativeProperty(matrixD, matrixE, matrixF);
+        associativeProperty(matrixD, matrixE, matrixF);
     }
 
     @Test
@@ -55,18 +53,14 @@ public class MultiplicationTests {
         associativeProperty(matrixA, matrixB, matrixC);
     }
 
-
     public void associativeProperty(Matrix<Double> matrixA, Matrix<Double> matrixB, Matrix<Double> matrixC) {
-        Matrix<Double> resultDE = sparseMatrixMultiplication.multiply(matrixA, matrixB);
-        Matrix<Double> resultDE_F = sparseMatrixMultiplication.multiply(resultDE, matrixC);
+        Matrix<Double> resultAB = sparseMatrixMultiplication.multiply(matrixA, matrixB);
+        Matrix<Double> resultAB_C = sparseMatrixMultiplication.multiply(resultAB, matrixC);
 
-        Matrix<Double> resultEF = sparseMatrixMultiplication.multiply(matrixB, matrixC);
-        Matrix<Double> resultD_EF = sparseMatrixMultiplication.multiply(matrixA, resultEF);
+        Matrix<Double> resultBC = sparseMatrixMultiplication.multiply(matrixB, matrixC);
+        Matrix<Double> resultA_BC = sparseMatrixMultiplication.multiply(matrixA, resultBC);
 
-        //matrixLoader.saveToFile((CoordinateMatrix<Double>) resultD_EF, "resultD_EF");
-        //matrixLoader.saveToFile((CoordinateMatrix<Double>) resultDE_F, "resultDE_F");
-
-        Assert.assertArrayEquals(((CoordinateMatrix<Double>) resultD_EF).get().toArray(),
-                ((CoordinateMatrix<Double>) resultDE_F).get().toArray());
+        Assert.assertArrayEquals(((CoordinateMatrix<Double>) resultAB_C).get().toArray(),
+                ((CoordinateMatrix<Double>) resultA_BC).get().toArray());
     }
 }
