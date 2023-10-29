@@ -18,14 +18,15 @@ public class DenseDoubleMatrixMultiplication implements MatrixMultiplication<Dou
         DenseMatrix<Double> matrixA = transform2Dense.execute(A);
         DenseMatrix<Double> matrixB = transform2Dense.execute(B);
 
-        System.out.println(matrixA.size());
         Double[][] result = new Double[matrixA.size()][matrixB.size()];
 
         for (int i=0; i<matrixA.size(); i++)
              for (int k=0; k<matrixA.size(); k++)
-                 for (int j=0; j<matrixA.size(); j++) {
-                     result[i][j] = result[i][j] + matrixA.get(i,k)* matrixB.get(k,j);
-                 }
+                 for (int j=0; j<matrixA.size(); j++)
+                     try {
+                         result[i][j] = result[i][j] + matrixA.get(i, k) * matrixB.get(k, j);
+
+                     } catch (NullPointerException e) {}
 
         return new DenseMatrix<>(A.size(), result);
     }

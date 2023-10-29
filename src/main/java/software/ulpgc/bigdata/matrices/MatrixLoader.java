@@ -6,5 +6,5 @@ import java.lang.reflect.Type;
 
 public interface MatrixLoader<Type> {
     CoordinateMatrix<Type> loadMatrix(String filePath);
-    void saveToFile(CoordinateMatrix<Double> matrix, String fileName);
+    void saveToFile(CoordinateMatrix<Type> matrix, String fileName);
 }

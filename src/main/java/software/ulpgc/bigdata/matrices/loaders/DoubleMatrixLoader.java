@@ -1,6 +1,7 @@
 package software.ulpgc.bigdata.matrices.loaders;
 
 import software.ulpgc.bigdata.matrices.MatrixBuilder;
+import software.ulpgc.bigdata.matrices.MatrixLoader;
 import software.ulpgc.bigdata.matrices.builders.CoordinateMatrixBuilder;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
@@ -12,7 +13,7 @@ import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.util.Random;
 
-public class DoubleMatrixLoader {
+public class DoubleMatrixLoader implements MatrixLoader<Double> {
     public CoordinateMatrix<Double> loadMatrix(String filePath) {
         CoordinateMatrixBuilder<Double> matrixBuilder = new CoordinateMatrixBuilder<>(0);
 

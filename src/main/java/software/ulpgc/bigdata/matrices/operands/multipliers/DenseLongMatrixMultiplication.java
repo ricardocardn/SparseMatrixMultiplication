@@ -29,7 +29,10 @@ public class DenseLongMatrixMultiplication implements MatrixMultiplication<Long>
         for (int i=0; i<matrixA.size(); i++)
              for (int k=0; k<matrixA.size(); k++)
                  for (int j=0; j<matrixA.size(); j++)
-                     result[i][j] += matrixA.get(i,k)*matrixB.get(k,j);
+                     try {
+                         result[i][j] = result[i][j] + matrixA.get(i, k) * matrixB.get(k, j);
+
+                     } catch (NullPointerException e) {}
 
         return new DenseMatrix<>(A.size(), result);
     }

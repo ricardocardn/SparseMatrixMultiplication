@@ -3,11 +3,9 @@ package software.ulpgc.bigdata.matrices.matrix.dense;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.coordinates.Coordinate;
 
-import java.lang.reflect.Type;
-
 public class DenseMatrix<Type> implements Matrix<Type> {
-    private final Type[][] matrix;
     private final int size;
+    private final Type[][] matrix;
 
     public DenseMatrix(int size, Type[][] matrix) {
         this.size = size;
@@ -16,8 +14,7 @@ public class DenseMatrix<Type> implements Matrix<Type> {
 
     @Override
     public Type get(int i, int j) {
-        System.out.println(matrix[0][0]);
-        return matrix[0][0];
+        return matrix[i][j];
     }
 
     @Override

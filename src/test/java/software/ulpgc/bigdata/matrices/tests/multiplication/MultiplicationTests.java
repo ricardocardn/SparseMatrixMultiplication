@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import software.ulpgc.bigdata.matrices.loaders.DoubleMatrixLoader;
 import software.ulpgc.bigdata.matrices.matrix.Matrix;
 import software.ulpgc.bigdata.matrices.matrix.compressed.CoordinateMatrix;
+import software.ulpgc.bigdata.matrices.operands.multipliers.DenseDoubleMatrixMultiplication;
 import software.ulpgc.bigdata.matrices.operands.multipliers.SparseDoubleMatrixMultiplication;
 
 import static junit.framework.TestCase.assertEquals;
@@ -18,6 +19,7 @@ public class MultiplicationTests {
     CoordinateMatrix<Double> mc2depi;
 
     SparseDoubleMatrixMultiplication sparseMatrixMultiplication;
+    DenseDoubleMatrixMultiplication denseDoubleMatrixMultiplication;
 
     {
         matrixLoader = new DoubleMatrixLoader();
@@ -26,6 +28,7 @@ public class MultiplicationTests {
         matrixC = matrixLoader.loadMatrix("src/test/resources/tests/cryg10000.mtx");
         mc2depi = matrixLoader.loadMatrix("src/test/resources/tests/mc2depi.mtx");
         sparseMatrixMultiplication = new SparseDoubleMatrixMultiplication();
+        denseDoubleMatrixMultiplication = new DenseDoubleMatrixMultiplication();
     }
 
     @Test
